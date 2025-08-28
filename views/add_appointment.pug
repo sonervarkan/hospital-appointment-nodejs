@@ -52,7 +52,7 @@ html(lang="en")
 
             selectedDepartment.addEventListener("change", function(){
                 const department_no = this.value;
-                // Bölüm değiştiğinde diğer alanları temizle
+            
                 selectedDoctor.innerHTML = '<option value="">Doktor seçin</option>';
                 selectedTime.innerHTML = '<option value="">Saat seçin</option>';
 
@@ -72,27 +72,27 @@ html(lang="en")
                 });
             });
 
-            // Hem doktor hem de tarih değiştiğinde bu fonksiyon çalışır
+   
             const fetchTimes = function() {
                 const doctor_no = selectedDoctor.value;
                 const appointmentdate = selectedDateInput.value;
 
-                // Kontrol: Eğer doktor veya tarih seçilmemişse, saat listesini temizle ve fonksiyondan çık
+              
                 if (!doctor_no || !appointmentdate) {
                     selectedTime.innerHTML = '<option value="">Lütfen önce doktor ve tarih seçin</option>';
                     return;
                 }
 
-                // Saatleri getirmek için AJAX isteği
+         
                 $.ajax({
                     url: "/booked_times",
                     data: { 'doctor_no': doctor_no, 'selectedDate': appointmentdate },
                     dataType: 'json',
                     success: function(availableTimes) {
-                        // Liste boş da gelse, önce temizle
+                 
                         selectedTime.innerHTML = '<option value="">Saat seçin</option>';
                         
-                        // Gelen boş saatleri listeye ekle
+                  
                         if (availableTimes.length > 0) {
                             availableTimes.forEach(function(time) {
                                 const option = document.createElement("option");
@@ -101,7 +101,7 @@ html(lang="en")
                                 selectedTime.appendChild(option);
                             });
                         } else {
-                            // Eğer boş saat yoksa, kullanıcıya bilgi ver
+                       
                             selectedTime.innerHTML = '<option value="" disabled>Bu tarihte boş saat yok</option>';
                         }
                     },
