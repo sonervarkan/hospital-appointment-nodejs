@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Add Patient 
+        link(rel="stylesheet" href="css\navbar.css")
+    body 
+        .navbar 
+            ul 
+                li 
+                    a(href="/") Home 
+                    a(href="/list_patient") List Patient 
+
+        form(action="add_patient" method="post")
+            label(for="patientname") Patient Name 
+            input(type="text" id="patientname" name="patientname")
+
+            label(for="patientsurname") Patient Surname 
+            input(type="text" id="patientsurname" name="patientsurname")
+
+            label(for="patienttcno") Patient Tc No 
+            input(type="text" id="patienttcno" name="patienttcno")
+
+            button(type="submit") Add

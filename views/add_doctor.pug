@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title List Department 
+        link(rel="stylesheet", href="css/navbar.css")
+    body 
+        .navbar 
+            .ul 
+                .li 
+                    a(href="/") Home Page 
+                    a(href="/list_doctor") List Doctor 
+
+        form(action="/add_doctor", method="post")
+
+            label(for="doctornamesurname") Doctor Name Surname
+            input(type="text", name="doctornamesurname", id="doctornamesurname")
+
+            select(name="department_no")
+                each department in departments
+                    option(value=department.department_no)=department.departmentname
+                     
+            button(type="submit") Add     

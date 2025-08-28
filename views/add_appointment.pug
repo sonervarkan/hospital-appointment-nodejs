@@ -1,0 +1,114 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Add Appointment 
+        link(rel="stylesheet", href="css/navbar.css")
+    body 
+        .navbar 
+            ul 
+                li 
+                    a(href="/") Home 
+                    a(href="/list_appointment") List Appointment 
+
+        form(action="add_appointment" method="post")
+            label(for="patientname") Patient Name
+            input(type="text" id="patientname" name="patientname")  
+
+            label(for="patientsurname") Patient Surname 
+            input(type="text" id="patientsurname" name="patientsurname")
+
+            label(for="patienttcno") Patient Tc No 
+            input(type="text" id="patienttcno" name="patienttcno")
+
+            select(name="department_no" id="department_no")
+                option(value="") Select a department
+                each department in departments
+                    option(value=department.department_no)=department.departmentname
+
+            select(name="doctor_no" id="doctor_no")
+                option(value="") Select a doctor
+                each doctor in doctors
+                    option(value=doctor.doctor_no)=doctor.doctornamesurname
+
+            label(for="appointmentdate") Appointment Date
+            input(type="date" id="appointmentdate" name="appointmentdate") 
+
+            select(name="hours_no" id="hours_no")
+                option(value="") Select a time
+                each time in times
+                    option(value=time.hours_no)=time.hour
+            
+            button(type="submit") Add
+        
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    script.
+        $(document).ready(function () {
+            const selectedDepartment = document.getElementById("department_no");
+            const selectedDoctor = document.getElementById("doctor_no");
+            const selectedTime = document.getElementById("hours_no");
+            const selectedDateInput = document.getElementById("appointmentdate"); 
+
+            selectedDepartment.addEventListener("change", function(){
+                const department_no = this.value;
+                // Bölüm değiştiğinde diğer alanları temizle
+                selectedDoctor.innerHTML = '<option value="">Doktor seçin</option>';
+                selectedTime.innerHTML = '<option value="">Saat seçin</option>';
+
+                if (!department_no) {
+                    return;
+                }
+
+                $.ajax({
+                    url: "/get_doctors_by_department",
+                    data: { 'department_no': department_no },
+                    dataType: 'json',
+                    success: function(doctors) {
+                        doctors.forEach(function(doctor) {
+                            $("#doctor_no").append('<option value="' + doctor.doctor_no + '">' + doctor.doctornamesurname + '</option>');
+                        });
+                    }
+                });
+            });
+
+            // Hem doktor hem de tarih değiştiğinde bu fonksiyon çalışır
+            const fetchTimes = function() {
+                const doctor_no = selectedDoctor.value;
+                const appointmentdate = selectedDateInput.value;
+
+                // Kontrol: Eğer doktor veya tarih seçilmemişse, saat listesini temizle ve fonksiyondan çık
+                if (!doctor_no || !appointmentdate) {
+                    selectedTime.innerHTML = '<option value="">Lütfen önce doktor ve tarih seçin</option>';
+                    return;
+                }
+
+                // Saatleri getirmek için AJAX isteği
+                $.ajax({
+                    url: "/booked_times",
+                    data: { 'doctor_no': doctor_no, 'selectedDate': appointmentdate },
+                    dataType: 'json',
+                    success: function(availableTimes) {
+                        // Liste boş da gelse, önce temizle
+                        selectedTime.innerHTML = '<option value="">Saat seçin</option>';
+                        
+                        // Gelen boş saatleri listeye ekle
+                        if (availableTimes.length > 0) {
+                            availableTimes.forEach(function(time) {
+                                const option = document.createElement("option");
+                                option.value = time.hours_no;
+                                option.textContent = time.hour;
+                                selectedTime.appendChild(option);
+                            });
+                        } else {
+                            // Eğer boş saat yoksa, kullanıcıya bilgi ver
+                            selectedTime.innerHTML = '<option value="" disabled>Bu tarihte boş saat yok</option>';
+                        }
+                    },
+                });
+            };
+
+            // Olay dinleyicilerini tek bir fonksiyona bağla
+            selectedDoctor.addEventListener("change", fetchTimes);
+            selectedDateInput.addEventListener("change", fetchTimes);
+        });

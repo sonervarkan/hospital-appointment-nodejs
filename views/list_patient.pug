@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title List Patient 
+        link(rel="stylesheet" href="css\navbar.css")
+    body 
+        .navbar 
+            ul 
+                li 
+                    a(href="/") Home
+        table 
+            thead 
+                tr 
+                    th Patient Name 
+                    th Patient Surname 
+                    th Patient Tc No 
+            tbody 
+                each patient in patients 
+                    tr 
+                        td=patient.patientname 
+                        td=patient.patientsurname 
+                        td=patient.patienttcno 
