@@ -31,7 +31,7 @@ The application uses **Express.js**, **MySQL**, and **Pug** for server-side rend
 ---
 
 ## Project Structure
-
+```
 hospital-appointment-system/
 ├── app.js
 ├── package.json
@@ -63,7 +63,7 @@ hospital-appointment-system/
 └── public/
 └── css/
 └── navbar.css
-
+```
 ---
 
 ## Installation
